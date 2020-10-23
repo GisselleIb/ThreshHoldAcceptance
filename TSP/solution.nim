@@ -1,4 +1,4 @@
-
+import graph
 
 type
   Solution* =object
