@@ -41,23 +41,18 @@ proc cost(s:Solution,g:Graph):float=
       #echo g.cities[i][j]
   return sum/normalizer(g,s)
 
-#proc neighbor(s:solution)
+
 var
-  r:seq[seq[string]]
   g:Graph[1092]
   s:Solution
 
-let db= open("tsp.db","","","")
-r=db.getAllRows(sql"SELECT * FROM connections")
-db.close()
-
 new(g)
-g=initGraph(g,1092)
-g=addNodes(r,g)
+g=g.initGraph(1092)
+g=g.addNodes
 
 s.cities= @[ 1,2,3,4,5,6,7,163,164,165,168,172,327,329,331,332,333,489,490,491,
 492,493,496,653,654,656,657,661,815,816,817,820,823,871,978,979,980,981,982,984]
-var lo=getLatLon(1,2)
-#echo naturalDistance(lo[0],lo[1])
-#echo normalizer(g,s)
+
+echo s
+echo s.randomNeighbor
 echo cost(s,g)

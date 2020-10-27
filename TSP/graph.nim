@@ -3,6 +3,7 @@ import strutils
 import math
 import algorithm
 
+
 type
   Graph*[size:static[int]]=ref object
     dim* : int
@@ -23,10 +24,16 @@ proc initGraph*(g:Graph,size:int):Graph=
 
   return g
 
-proc addNodes*(cities:seq[seq[string]],g: Graph):Graph=
+proc getDistances():seq[seq[string]]=
+  let db= open("tsp.db","","","")
+  result=db.getAllRows(sql"SELECT * FROM connections")
+  db.close()
+  return result
+
+proc addNodes*(g: Graph):Graph=
   var
     g=g
-
+    cities=getDistances()
   for c in cities:
     var
       i=parseInt(c[0])
@@ -34,5 +41,4 @@ proc addNodes*(cities:seq[seq[string]],g: Graph):Graph=
       d=parseFloat(c[2])
     #echo "i: ", i, " j: ", j," d: ", d
     g.cities[i][j]=d
-
   return g
