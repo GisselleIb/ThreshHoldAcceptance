@@ -15,8 +15,8 @@ proc normalizer(g:Graph,s:Solution):float=
       var
         i=s.cities[n]
         j=s.cities[m]
-      if g.cities[i][j] != -1:
-        l.add(g.cities[i][j])
+      if g.cities[i][j].exists:
+        l.add(g.cities[i][j].distance)
 
   sort(l,system.cmp[float],Descending)
 
@@ -33,11 +33,11 @@ proc cost(s:Solution,g:Graph):float=
     var
       i=s.cities[k]
       j=s.cities[k+1]
-    if g.cities[i][j] == -1:
-      var latlon=getLatLon(i,j)
-      sum=sum+weight(latlon[0],latlon[1],g,s)
+      node=g.cities[i][j]
+    if not node.exists:
+      sum=sum+weight(s,node.distance,g)
     else:
-      sum=sum+g.cities[i][j]
+      sum=sum+node.distance
       #echo g.cities[i][j]
   return sum/normalizer(g,s)
 
@@ -50,6 +50,7 @@ new(g)
 g=g.initGraph(1092)
 g=g.addNodes()
 
+
 s1.cities= @[ 1,2,3,4,5,6,7,163,164,165,168,172,327,329,331,332,333,489,490,491,
 492,493,496,653,654,656,657,661,815,816,817,820,823,871,978,979,980,981,982,984]
 s2.cities= @[1,2,3,4,5,6,7,8,9,11,12,14,16,17,19,20,22,23,25,26,27,74,75,151,163,
@@ -61,5 +62,6 @@ s2.cities= @[1,2,3,4,5,6,7,8,9,11,12,14,16,17,19,20,22,23,25,26,27,74,75,151,163
 832,837,839,840,871,978,979,980,981,982,984,985,986,988,990,991,995,999,1001,
 1003,1004,1037,1038,1073,1075]
 
+echo normalizer(g,s1)
 echo cost(s1,g)
 echo cost(s2,g)

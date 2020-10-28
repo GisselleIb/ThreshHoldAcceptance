@@ -1,5 +1,6 @@
-import graph
 import random
+import graph
+import distance
 
 type
   Solution* =object
@@ -35,3 +36,22 @@ proc randomNeighbor*(s:Solution):Solution=
   nb.cities[j]=s.cities[i]
 
   return nb
+
+
+proc maxDistance*(g:Graph,s:Solution):float=
+  var
+    max=0.0
+
+  for n in countup(0,len(s.cities)-2):
+    for m in countup(n+1,len(s.cities)-1):
+      var
+        i=s.cities[n]
+        j=s.cities[m]
+
+      if g.cities[i][j].exists and g.cities[i][j].distance > max:
+        max=g.cities[i][j].distance
+
+  return max
+
+proc weight*(s:Solution,nd:float,g:Graph):float=
+  return nd*maxDistance(g,s)
