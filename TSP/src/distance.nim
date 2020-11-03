@@ -27,13 +27,13 @@ proc naturalDistance*(u,v:seq[string]):float=
 
 
 proc getLatLon*():seq[seq[string]]=
-  let db= open("tsp.db","","","")
+  let db= open("src/tsp.db","","","")
   result=db.getAllRows(sql"SELECT latitude, longitude FROM cities")
   db.close()
   return result
 
 proc getDistances*():seq[seq[string]]=
-  let db= open("tsp.db","","","")
+  let db= open("src/tsp.db","","","")
   result=db.getAllRows(sql"SELECT * FROM connections")
   db.close()
   return result
