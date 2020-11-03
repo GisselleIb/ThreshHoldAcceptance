@@ -11,9 +11,7 @@ type
     cities* :array[1..size,array[1..size,tuple[distance:float,exists:bool]]]
 
 
-proc initGraph*(g:Graph,size:int):Graph=
-  var
-    g=g
+proc initGraph*(g:var Graph,size:int)=
   g.dim=size
 
   for i in countup(1,size):
@@ -23,12 +21,10 @@ proc initGraph*(g:Graph,size:int):Graph=
       else:
         g.cities[i][j]= (-1.0,false)
 
-  return g
 
 
-proc addNodes*(g: Graph):Graph=
+proc addNodes*(g:var  Graph)=
   var
-    g=g
     cities=getDistances()
     latlon=getLatLon()
   for c in cities:
@@ -43,5 +39,3 @@ proc addNodes*(g: Graph):Graph=
     for j in countup(1,g.dim):
       if not g.cities[i][j].exists:
         g.cities[i][j].distance=naturalDistance(latlon[i-1],latlon[j-1])
-
-  return g

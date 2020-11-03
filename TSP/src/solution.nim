@@ -8,22 +8,6 @@ type
     cities* :seq[int]
     norm* :float
 
-
-proc neighborhood*(s :Solution):seq[Solution]=
-  var
-    nb:Solution
-    nbs:seq[Solution]
-
-  for i in countup(0,len(s.cities)-1):
-    for j in countup(i+1,len(s.cities)-1):
-      nb=s
-      nb.cities[i]=s.cities[j]
-      nb.cities[j]=s.cities[i]
-      nbs.add(nb)
-
-  return nbs
-
-
 proc randomNeighbor*(s:Solution):Solution=
   var
     nb:Solution=s
@@ -31,6 +15,7 @@ proc randomNeighbor*(s:Solution):Solution=
     j:int=0
 
   randomize()
+  
   while i==j:
     i=rand(s.cities.len-1)
     j=rand(s.cities.len-1)
@@ -82,7 +67,9 @@ proc normalizer*(s:Solution,g:Graph):float=
   return suma
 
 proc cost*(s:Solution,g:Graph):float=
-  var sum=0.0
+  var
+    sum:float=0.0
+
   for k in countup(0,len(s.cities)-2):
     var
       i=s.cities[k]
