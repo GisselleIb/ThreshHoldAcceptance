@@ -15,7 +15,7 @@ proc randomNeighbor*(s:Solution):Solution=
     j:int=0
 
   randomize()
-  
+
   while i==j:
     i=rand(s.cities.len-1)
     j=rand(s.cities.len-1)
