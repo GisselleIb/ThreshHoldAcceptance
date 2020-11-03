@@ -3,7 +3,7 @@ import solution
 import distance
 
 
-proc batch(T:float,s:Solution,g:Graph,L:int=100):(float,Solution)=
+proc batch(T:float,s:Solution,g:Graph,L:int=500):(float,Solution)=
   var
     s=s
     i:int=0
@@ -38,10 +38,12 @@ proc simulatedAnnealing(T:float,s:Solution,g:Graph,epsilon:float=0.01):(Solution
     while p <= q:
       q=p
       (p,s)=batch(T,s,g)
-      #echo "q: ", q
+      #echo "Solution: ", s
     T=0.65*T
-    #echo "T: ",T
+
   return (s,s.cost(g))
+
+
 
 when isMainModule:
   var
@@ -52,8 +54,6 @@ when isMainModule:
   g.initGraph(1092)
   g.addNodes()
 
-  #s1.cities= @[871,984,327,980,164,492,817,5,496,493,331,489,979,981,820,332,982,
-  #816,815,661,654,823,657,656,490,163,1,329,7,2,653,168,172,333,6,978,3,165,4,491]
   s1.cities= @[ 1,2,3,4,5,6,7,163,164,165,168,172,327,329,331,332,333,489,490,491,
   492,493,496,653,654,656,657,661,815,816,817,820,823,871,978,979,980,981,982,984]
   s2.cities= @[1,2,3,4,5,6,7,8,9,11,12,14,16,17,19,20,22,23,25,26,27,74,75,151,163,
@@ -67,5 +67,5 @@ when isMainModule:
 
   s1.norm=s1.normalizer(g)
   s2.norm=s2.normalizer(g)
-  echo simulatedAnnealing(500.0,s1,g)
-  echo simulatedAnnealing(300.0,s2,g)
+  echo simulatedAnnealing(200.0,s1,g)
+  echo simulatedAnnealing(100.0,s2,g)

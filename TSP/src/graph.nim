@@ -34,6 +34,7 @@ proc addNodes*(g:var  Graph)=
       d=parseFloat(c[2])
     #echo "i: ", i, " j: ", j," d: ", d
     g.cities[i][j]=(d,true)
+    g.cities[j][i]=(d,true)
 
   for i in countup(1,g.dim):
     for j in countup(1,g.dim):

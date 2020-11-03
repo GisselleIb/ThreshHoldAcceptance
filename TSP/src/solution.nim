@@ -13,14 +13,17 @@ proc randomNeighbor*(s:Solution):Solution=
     nb:Solution=s
     i:int=0
     j:int=0
+    temp:int
 
   randomize()
 
   while i==j:
     i=rand(s.cities.len-1)
     j=rand(s.cities.len-1)
-  nb.cities[i]=s.cities[j]
-  nb.cities[j]=s.cities[i]
+
+  temp=nb.cities[i]
+  nb.cities[i]=nb.cities[j]
+  nb.cities[j]=temp
 
   return nb
 
@@ -54,8 +57,9 @@ proc normalizer*(s:Solution,g:Graph):float=
       var
         i=s.cities[n]
         j=s.cities[m]
-      if g.cities[i][j].exists:
-        l.add(g.cities[i][j].distance)
+        node=g.cities[i][j]
+      if node.exists:
+        l.add(node.distance)
 
   sort(l,system.cmp[float],Descending)
 
