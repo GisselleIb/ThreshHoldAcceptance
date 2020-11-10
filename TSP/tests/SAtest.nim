@@ -28,11 +28,11 @@ when isMainModule:
       832,837,839,840,871,978,979,980,981,982,984,985,986,988,990,991,995,999,1001,
       1003,1004,1037,1038,1073,1075]
 
-      solution40.norm=solution40.normalizer(g)
-      solution150.norm=solution150.normalizer(g)
+      solution40.initSolution(g)
+      solution150.initSolution(g)
 
-      c40=simulatedAnnealing(200.0,solution40,g)[1]
-      #c150=simulatedAnnealing(100.0,solution150,g)[1]
+      c40=simulatedAnnealing(62000.0,solution40,g)[1]
+      c150=simulatedAnnealing(6200000.0,solution150,g)[1]
 
 
     test "Normalizer of solution":
@@ -45,4 +45,4 @@ when isMainModule:
 
     test "Simulated Annealing":
       check c40 <= 1.0
-      #check c150 <= 1.0
+      check c150 <= 1.0

@@ -9,6 +9,10 @@ type
     norm* :float
     maxD*:float
 
+proc initSolution*(s:var Solution,g:Graph)=
+  s.norm=s.normalizer(g)
+  s.maxD=s.maxDistance(g)
+
 proc randomNeighbor*(s:Solution):Solution=
   var
     nb:Solution=s
