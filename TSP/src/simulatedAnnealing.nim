@@ -41,7 +41,7 @@ proc simulatedAnnealing*(T:float,s:Solution,g:Graph,epsilon:float=0.001):(Soluti
       (p,s)=batch(T,s,g,L)
       #echo "Solution: ", s
     T=0.95*T
-    echo T
+    
   return (s,s.cost(g))
 
 
