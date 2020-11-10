@@ -7,6 +7,7 @@ type
   Solution* =object
     cities* :seq[int]
     norm* :float
+    maxD*:float
 
 proc randomNeighbor*(s:Solution):Solution=
   var
@@ -44,7 +45,7 @@ proc maxDistance*(s:Solution,g:Graph):float=
   return max
 
 proc weight*(s:Solution,nd:float,g:Graph):float=
-  return nd*s.maxDistance(g)
+  return nd*s.maxD
 
 
 proc normalizer*(s:Solution,g:Graph):float=

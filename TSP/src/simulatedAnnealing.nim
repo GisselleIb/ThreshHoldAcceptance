@@ -3,7 +3,7 @@ import solution
 import distance
 
 
-proc batch(T:float,s:Solution,g:Graph,L:int=500):(float,Solution)=
+proc batch(T:float,s:Solution,g:Graph,L:int):(float,Solution)=
   var
     s=s
     i:int=0
@@ -13,7 +13,7 @@ proc batch(T:float,s:Solution,g:Graph,L:int=500):(float,Solution)=
     fnb:float
     nb:Solution
 
-  while c < L and i < 4*L:
+  while c < L and i < 3*L:
     nb=s.randomNeighbor()
     fs=s.cost(g)
     fnb=nb.cost(g)
@@ -26,10 +26,11 @@ proc batch(T:float,s:Solution,g:Graph,L:int=500):(float,Solution)=
 
   return (r/float(L),s)
 
-proc simulatedAnnealing(T:float,s:Solution,g:Graph,epsilon:float=0.01):(Solution,float)=
+proc simulatedAnnealing*(T:float,s:Solution,g:Graph,epsilon:float=0.001):(Solution,float)=
   var
     s=s
     T=T
+    L:int=5620
     q=high(BiggestFloat)
     p:float=0.0
 
@@ -37,10 +38,10 @@ proc simulatedAnnealing(T:float,s:Solution,g:Graph,epsilon:float=0.01):(Solution
     q=high(BiggestFloat)
     while p <= q:
       q=p
-      (p,s)=batch(T,s,g)
+      (p,s)=batch(T,s,g,L)
       #echo "Solution: ", s
-    T=0.65*T
-
+    T=0.95*T
+    echo T
   return (s,s.cost(g))
 
 
@@ -65,7 +66,9 @@ when isMainModule:
   832,837,839,840,871,978,979,980,981,982,984,985,986,988,990,991,995,999,1001,
   1003,1004,1037,1038,1073,1075]
 
-  s1.norm=s1.normalizer(g)
+  #s1.norm=s1.normalizer(g)
   s2.norm=s2.normalizer(g)
-  echo simulatedAnnealing(200.0,s1,g)
-  echo simulatedAnnealing(100.0,s2,g)
+  #s1.maxD=s1.maxDistance(g)
+  s2.maxD=s2.maxDistance(g)
+  #echo simulatedAnnealing(62000.0,s1,g)
+  echo simulatedAnnealing(6200000.0,s2,g)

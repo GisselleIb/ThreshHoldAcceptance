@@ -1,4 +1,5 @@
 import ../src/graph
+import ../src/simulatedAnnealing
 import ../src/solution
 import unittest
 
@@ -10,6 +11,7 @@ when isMainModule:
       var
         g:Graph[1092]
         solution40,solution150:Solution
+        c40,c150:float
 
       new(g)
       g.initGraph(1092)
@@ -29,6 +31,9 @@ when isMainModule:
       solution40.norm=solution40.normalizer(g)
       solution150.norm=solution150.normalizer(g)
 
+      c40=simulatedAnnealing(200.0,solution40,g)[1]
+      #c150=simulatedAnnealing(100.0,solution150,g)[1]
+
 
     test "Normalizer of solution":
       check solution40.norm <= 180836110.430000007
@@ -37,3 +42,7 @@ when isMainModule:
     test "Cost of solution":
       check solution40.cost(g) <= 3305585.454990047
       check solution150.cost(g) <= 6152051.625245281
+
+    test "Simulated Annealing":
+      check c40 <= 1.0
+      #check c150 <= 1.0
