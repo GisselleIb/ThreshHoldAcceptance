@@ -128,7 +128,9 @@ when isMainModule:
   s2.initSolution(g)
   T1=initialTemperature(s1,1000.0,0.9,g)
   T2=initialTemperature(s2,1000.0,0.95,g)
-  
 
-  echo simulatedAnnealing(T1,s1,g)
-  echo simulatedAnnealing(T2,s2,g)
+  echo simulatedAnnealing(62000.0,s1,g)
+  echo simulatedAnnealing(6200000.0,s2,g)
+
+  #echo simulatedAnnealing(T1,s1,g)
+  #echo simulatedAnnealing(T2,s2,g)
