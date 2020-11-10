@@ -3,6 +3,63 @@ import solution
 import distance
 
 
+proc acceptedPercentage(s:Solution,T:float,g:Graph):float=
+  var
+    s=s
+    c:int=0
+    snb:Solution
+    N:int=int(len(s.cities)*(len(s.cities)-1)/2)
+
+  for i in countup(1,N):
+    snb=s.randomNeighbor()
+    if snb.cost(g) <= s.cost(g)+T:
+      c=c+1
+      s=snb
+
+  return c/N
+
+
+proc binarySearch(s:Solution,g:Graph,T1,T2,P:float,epsilon:float=0.001):float=
+  var
+    p:float
+    Tm:float=(T1+T2)/2
+
+  if T2-T1 < epsilon:
+    return Tm
+  p=acceptedPercentage(s,Tm,g)
+  if abs(P-p) < epsilon:
+    return Tm
+  if p > P:
+    return binarySearch(s,g,T1,Tm,P)
+  else:
+    return binarySearch(s,g,Tm,T2,P)
+
+
+proc initialTemperature*(s:Solution,T:float,P:float,g:Graph,epsilon:float=0.001):float=
+  var
+    T=T
+    p:float=acceptedPercentage(s,T,g)
+    T1,T2:float
+
+  if abs(P-p) <= epsilon:
+    return T
+  if p < P:
+    while p<P:
+      T=2*T
+      p=acceptedPercentage(s,T,g)
+      T1=T/2
+      T2=T
+  else:
+    while p>P:
+      T=T/2
+      p=acceptedPercentage(s,T,g)
+    T1=T
+    T2=2*T
+
+  return binarySearch(s,g,T1,T2,P)
+
+
+
 proc batch(T:float,s:Solution,g:Graph,L:int):(float,Solution)=
   var
     s=s
@@ -26,11 +83,12 @@ proc batch(T:float,s:Solution,g:Graph,L:int):(float,Solution)=
 
   return (r/float(L),s)
 
+
 proc simulatedAnnealing*(T:float,s:Solution,g:Graph,epsilon:float=0.001):(Solution,float)=
   var
     s=s
     T=T
-    L:int=5620
+    L:int=int(len(s.cities)*(len(s.cities)-1)/2)
     q=high(BiggestFloat)
     p:float=0.0
 
@@ -49,6 +107,7 @@ when isMainModule:
   var
     g:Graph[1092]
     s1,s2:Solution
+    T1,T2:float
 
   new(g)
   g.initGraph(1092)
@@ -67,5 +126,9 @@ when isMainModule:
 
   s1.initSolution(g)
   s2.initSolution(g)
-  echo simulatedAnnealing(62000.0,s1,g)
-  echo simulatedAnnealing(6200000.0,s2,g)
+  T1=initialTemperature(s1,1000.0,0.9,g)
+  T2=initialTemperature(s2,1000.0,0.95,g)
+  
+
+  echo simulatedAnnealing(T1,s1,g)
+  echo simulatedAnnealing(T2,s2,g)
