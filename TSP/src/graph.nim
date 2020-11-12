@@ -11,7 +11,7 @@ type
     cities* :array[1..size,array[1..size,tuple[distance:float,exists:bool]]]
 
 
-proc initGraph*(g:var Graph,size:int)=
+proc initGraph*(g:var Graph,size:int,db:string)=
   g.dim=size
 
   for i in countup(1,size):
@@ -21,12 +21,14 @@ proc initGraph*(g:var Graph,size:int)=
       else:
         g.cities[i][j]= (-1.0,false)
 
+  g.addNodes(db)
 
 
-proc addNodes*(g:var  Graph)=
+
+proc addNodes*(g:var Graph,db:string)=
   var
-    cities=getDistances()
-    latlon=getLatLon()
+    cities=getDistances(db)
+    latlon=getLatLon(db)
   for c in cities:
     var
       i=parseInt(c[0])

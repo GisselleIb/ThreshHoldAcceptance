@@ -2,6 +2,7 @@ import db_sqlite
 import strutils
 import math
 
+
 proc rad*(g:float):float=
   return g*PI/180
 
@@ -26,14 +27,15 @@ proc naturalDistance*(u,v:seq[string]):float=
   return d
 
 
-proc getLatLon*():seq[seq[string]]=
-  let db= open("src/tsp.db","","","")
+proc getLatLon*(db:string):seq[seq[string]]=
+  let db= open(db,"","","")
   result=db.getAllRows(sql"SELECT latitude, longitude FROM cities")
   db.close()
   return result
 
-proc getDistances*():seq[seq[string]]=
-  let db= open("src/tsp.db","","","")
+
+proc getDistances*(db:string):seq[seq[string]]=
+  let db= open(db,"","","")
   result=db.getAllRows(sql"SELECT * FROM connections")
   db.close()
   return result

@@ -1,36 +1,59 @@
-import random
 import algorithm
 import graph
 import distance
+import random
+
 
 type
   Solution* =object
     cities* :seq[int]
     norm* :float
     maxD*:float
+    c*:float
 
-proc initSolution*(s:var Solution,g:Graph)=
-  s.norm=s.normalizer(g)
-  s.maxD=s.maxDistance(g)
 
-proc randomNeighbor*(s:Solution):Solution=
+
+proc getWeight(s,:Solution,i,j:int,g:Graph):float=
   var
-    nb:Solution=s
-    i:int=0
-    j:int=0
-    temp:int
+    m:int=s.cities[i]
+    n:int=s.cities[j]
+    e=g.cities[m][n]
+  if e.exists:
+    return e.distance
+  else:
+    return s.weight(e.distance,g)
 
-  randomize()
+
+proc randomNeighbor*(s:Solution,g:Graph):(int,int,float64)=
+  var
+    i,j:int=0
+    length=s.cities.len
+    r:float64=s.c*s.norm
 
   while i==j:
-    i=rand(s.cities.len-1)
-    j=rand(s.cities.len-1)
+    i=rand(length-1)
+    j=rand(length-1)
 
-  temp=nb.cities[i]
-  nb.cities[i]=nb.cities[j]
-  nb.cities[j]=temp
+  if i>0:
+    r=r-s.getWeight(i-1,i,g)
+    r=r+s.getWeight(i-1,j,g)
 
-  return nb
+  if i < length-1:
+    r=r-s.getWeight(i,i+1,g)
+    r=r+s.getWeight(j,i+1,g)
+
+  if j>0:
+    r=r-s.getWeight(j-1,j,g)
+    r=r+s.getWeight(j-1,i,g)
+
+  if j < length-1:
+    r=r-s.getWeight(j,j+1,g)
+    r=r+s.getWeight(i,j+1,g)
+
+  if i-1 == j or i+1 == j:
+    r=r+(2*s.getWeight(i,j,g))
+
+  return (i,j,r/s.norm)
 
 
 proc maxDistance*(s:Solution,g:Graph):float=
@@ -90,3 +113,16 @@ proc cost*(s:Solution,g:Graph):float=
       sum=sum+node.distance
       #echo g.cities[i][j]
   return sum/s.norm
+
+proc initSolution*(s:var Solution,cities:seq[int],g:Graph)=
+  s.cities=cities
+  s.norm=s.normalizer(g)
+  s.maxD=s.maxDistance(g)
+  s.c=s.cost(g)
+
+
+proc swap*(s:var Solution,r:float,i,j:int)=
+  var temp=s.cities[i]
+  s.cities[i]=s.cities[j]
+  s.cities[j]=temp
+  s.c=r

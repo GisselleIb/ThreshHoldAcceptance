@@ -12,6 +12,7 @@ when isMainModule:
         g:Graph[1092]
         solution40,solution150:Solution
         c40,c150:float
+        t1,t2:float
 
       new(g)
       g.initGraph(1092)
@@ -31,8 +32,11 @@ when isMainModule:
       solution40.initSolution(g)
       solution150.initSolution(g)
 
-      c40=simulatedAnnealing(62000.0,solution40,g)[1]
-      c150=simulatedAnnealing(6200000.0,solution150,g)[1]
+      t1=initialTemperature(solution40,1000.0,0.9,g)
+      t2=initialTemperature(solution50,1000.0,0.9,g)
+
+      c40=simulatedAnnealing(t1,solution40,g)[1]
+      c150=simulatedAnnealing(t2,solution150,g)[1]
 
 
     test "Normalizer of solution":
