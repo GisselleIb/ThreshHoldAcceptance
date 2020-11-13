@@ -3,8 +3,14 @@ import graph
 import distance
 import random
 
+## Module that defines the class and the procedures needed for modeling a Solution
+## used in TSP.
 
 type
+  ## Type that contains the definition of a solution, it has an attribute for
+  ## the permutation of cities that represents the solution, an attribute for
+  ## the value of the normalizer of the solution, an attribute for the maximum
+  ## distance between cities in S and an attribute for the cost of the solution.
   Solution* =object
     cities* :seq[int]
     norm* :float
@@ -14,6 +20,8 @@ type
 
 
 proc getWeight(s,:Solution,i,j:int,g:Graph):float=
+  ## Gets the weight between two cities, given the indexes
+  ## where they are placed in the permutation of the solution.
   var
     m:int=s.cities[i]
     n:int=s.cities[j]
@@ -25,6 +33,12 @@ proc getWeight(s,:Solution,i,j:int,g:Graph):float=
 
 
 proc randomNeighbor*(s:Solution,g:Graph):(int,int,float64)=
+  ## Generates two random indexes in the permutation and calculates
+  ## the cost of the solution ``nb`` that results of swapping the two elements.
+  ## Returns the indexes ``i,j`` that generates ``nb`` and the **cost**
+  ## of ``nb``.
+  ## This procedure is optimized by calculating the cost only substracting
+  ## and adding the weights that are affected by the *swap* of ``i`` and ``j``.
   var
     i,j:int=0
     length=s.cities.len
@@ -57,6 +71,7 @@ proc randomNeighbor*(s:Solution,g:Graph):(int,int,float64)=
 
 
 proc maxDistance*(s:Solution,g:Graph):float=
+  ## Gets the maximum distance that exists in the permutation of the solution.
   var
     max=0.0
 
@@ -72,10 +87,15 @@ proc maxDistance*(s:Solution,g:Graph):float=
   return max
 
 proc weight*(s:Solution,nd:float,g:Graph):float=
+  ## Calculates the weight of two cities that doesn't have a real weight between
+  ## them, using the natural distance between them and the maximum distance in
+  ## the solution.
   return nd*s.maxD
 
 
 proc normalizer*(s:Solution,g:Graph):float=
+  ## Calculates the sum of *len(s.cities)-1* of the worst distances between
+  ## cities in the solution s.
   var
     suma:float
     l:seq[float]
@@ -99,6 +119,9 @@ proc normalizer*(s:Solution,g:Graph):float=
   return suma
 
 proc cost*(s:Solution,g:Graph):float=
+  ## Calculates the cost of the solution, this is the sum of the distances of
+  ## the cities that are next to each other in the permutation, divided by
+  ## the normalizer of the solution.
   var
     sum:float=0.0
 
@@ -115,6 +138,8 @@ proc cost*(s:Solution,g:Graph):float=
   return sum/s.norm
 
 proc initSolution*(s:var Solution,cities:seq[int],g:Graph)=
+  ## Initialize the solution and calculates the normalizer, the maximun distance
+  ## and the cost.
   s.cities=cities
   s.norm=s.normalizer(g)
   s.maxD=s.maxDistance(g)
@@ -122,6 +147,7 @@ proc initSolution*(s:var Solution,cities:seq[int],g:Graph)=
 
 
 proc swap*(s:var Solution,r:float,i,j:int)=
+  ## Swap the cities in the indexes ``i,j`` of the permutation.
   var temp=s.cities[i]
   s.cities[i]=s.cities[j]
   s.cities[j]=temp

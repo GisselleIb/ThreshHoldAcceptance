@@ -2,9 +2,13 @@ import graph
 import solution
 import distance
 import random
+import times
 
+## Module that contains the necessary procedures for the main algorithm: simulated annealing.
 
-proc acceptedPercentage(s:Solution,T:float,g:Graph):float=
+proc acceptedPercentage*(s:Solution,T:float,g:Graph):float=
+  ## Calculates the percentage of solutions accepted given a temperature ``T``.
+
   var
     s=s
     m,n:int
@@ -21,7 +25,9 @@ proc acceptedPercentage(s:Solution,T:float,g:Graph):float=
   return c/N
 
 
-proc binarySearch(s:Solution,g:Graph,T1,T2,P:float,epsilon:float=0.001):float=
+proc binarySearch*(s:Solution,g:Graph,T1,T2,P:float,epsilon:float=0.001):float=
+  ## Recursive binary search for an optimal initial temperature.
+
   var
     p:float
     Tm:float=(T1+T2)/2
@@ -38,6 +44,7 @@ proc binarySearch(s:Solution,g:Graph,T1,T2,P:float,epsilon:float=0.001):float=
 
 
 proc initialTemperature*(s:Solution,T:float,P:float,g:Graph,epsilon:float=0.001):float=
+  ## Procedure for calculating an optimal temperature for the given solution.
   var
     T=T
     p:float=acceptedPercentage(s,T,g)
@@ -62,7 +69,14 @@ proc initialTemperature*(s:Solution,T:float,P:float,g:Graph,epsilon:float=0.001)
 
 
 
-proc batch(T:float,s:Solution,g:Graph,L:int):(float,Solution,Solution)=
+proc batch*(T:float,s:Solution,g:Graph,L:int):(float,Solution)=
+  ## Generates a batch of L accepted solutions, returns the average of the
+  ## accepted solutions and the last solution accepted.
+  ## Each solution s' is a solution in the neighborhood of the current solution
+  ## s, and it is only accepted if it happens that *f(s') <= f(s)+T* where
+  ## *f(x)* is the cost of the solution and ``T`` is the current temperature.
+  ## This procedure is optimized so generate a neighbour solution cost
+  ## will take constant time.
   var
     s=s
     i:int=0
@@ -71,7 +85,6 @@ proc batch(T:float,s:Solution,g:Graph,L:int):(float,Solution,Solution)=
     fs:float
     fnb:float
     m,n:int
-    bestSol:Solution
 
   while c < L and i < 3*L:
     (m,n,fnb)=s.randomNeighbor(g)
@@ -80,20 +93,20 @@ proc batch(T:float,s:Solution,g:Graph,L:int):(float,Solution,Solution)=
       s.swap(fnb,m,n)
       c=c+1
       r=r+fnb
-      bestSol=s
-      #if fnb < fs:
-      #  echo s
     else:
       i=i+1
 
-  return (r/float(L),s,bestSol)
+  return (r/float(L),s)
 
 
-proc simulatedAnnealing*(T:float,s:Solution,g:Graph,epsilon:float=0.0001):(Solution,Solution)=
+proc simulatedAnnealing*(T:float,s:Solution,g:Graph,epsilon:float=0.0001):Solution=
+  ## Threshold accepting algorithm, a variation of simulated annealing.
+  ## Given a solution, a graph and an initial temperature, calculates
+  ## an optimal solution. The algorithm ends when the temperature reach 0.0001
+  ## and the cooling factor used is 0.95.
   var
     s=s
     T=T
-    bestSol:Solution=s
     L:int=int(len(s.cities)*(len(s.cities)-1)/2)
     q=high(BiggestFloat)
     p:float=0.0
@@ -101,8 +114,9 @@ proc simulatedAnnealing*(T:float,s:Solution,g:Graph,epsilon:float=0.0001):(Solut
   while T > epsilon:
     q=high(BiggestFloat)
     while p <= q:
+      #echo cpuTime()-time
       q=p
-      (p,s,bestSol)=batch(T,s,g,L)
+      (p,s)=batch(T,s,g,L)
     T=0.95*T
     #echo "S: ", s.c
-  return (s,bestSol)
+  return s

@@ -2,12 +2,15 @@ import db_sqlite
 import strutils
 import math
 
-
+## Module with the procedures needed to calculate everything related to the
+## distances in the graph.
 proc rad*(g:float):float=
+  ## Convertion of degrees to radians.
   return g*PI/180
 
 
 proc A*(u,v:seq[string]):float=
+  ## Auxiliary method for the calculus of the natural distance.
   var
     latu=rad(parseFloat(u[0]))
     latv=rad(parseFloat(v[0]))
@@ -19,6 +22,8 @@ proc A*(u,v:seq[string]):float=
 
 
 proc naturalDistance*(u,v:seq[string]):float=
+  ## Calculates the natural distance between two cities given the latitude and
+  ## longitude of the two.
   var
     d:float
     a:float
@@ -28,6 +33,7 @@ proc naturalDistance*(u,v:seq[string]):float=
 
 
 proc getLatLon*(db:string):seq[seq[string]]=
+  ## Gets the latitude and longitude of all the cities in the given database.
   let db= open(db,"","","")
   result=db.getAllRows(sql"SELECT latitude, longitude FROM cities")
   db.close()
@@ -35,6 +41,7 @@ proc getLatLon*(db:string):seq[seq[string]]=
 
 
 proc getDistances*(db:string):seq[seq[string]]=
+  ## Gets all the distances between cities in the given database.
   let db= open(db,"","","")
   result=db.getAllRows(sql"SELECT * FROM connections")
   db.close()
