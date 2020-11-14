@@ -1,6 +1,6 @@
 Primero se debe cargar la base de datos con el comando:
 
-$ sqlite3 tsp.sql > tsp.db
+$ sqlite3 tsp.db <tsp.sql
 
 Para compilar el programa basta con escribir en la terminal
 desde el directorio TSP :
