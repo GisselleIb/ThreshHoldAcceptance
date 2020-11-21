@@ -37,5 +37,5 @@ when isMainModule:
     randomize(seed)
     echo "SEED: ",seed
     T=initialTemperature(s,1000.0,0.9,g)
-    var c=simulatedAnnealing(T,s,g)
-    echo c
+    var s=simulatedAnnealing(T,s,g)
+    echo s

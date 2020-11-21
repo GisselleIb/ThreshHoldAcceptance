@@ -79,6 +79,7 @@ proc batch*(T:float,s:Solution,g:Graph,L:int):(float,Solution)=
   ## will take constant time.
   var
     s=s
+    bestSol=s.c
     i:int=0
     c:int=0
     r:float=0.0
@@ -93,8 +94,11 @@ proc batch*(T:float,s:Solution,g:Graph,L:int):(float,Solution)=
       s.swap(fnb,m,n)
       c=c+1
       r=r+fnb
+      if fnb < bestSol:
+        bestSol=fnb
     else:
       i=i+1
+  #echo bestSol, " ", s.c
 
   return (r/float(L),s)
 
@@ -110,11 +114,14 @@ proc simulatedAnnealing*(T:float,s:Solution,g:Graph,epsilon:float=0.0001):Soluti
     L:int=int(len(s.cities)*(len(s.cities)-1)/2)
     q=high(BiggestFloat)
     p:float=0.0
+    time:float
 
   while T > epsilon:
     q=high(BiggestFloat)
+    time= cpuTime()
     while p <= q:
-      #echo cpuTime()-time
+      if cpuTime()-time > 1.0:
+        break
       q=p
       (p,s)=batch(T,s,g,L)
     T=0.95*T

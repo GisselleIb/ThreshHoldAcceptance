@@ -29,7 +29,7 @@ proc getWeight(s,:Solution,i,j:int,g:Graph):float=
   if e.exists:
     return e.distance
   else:
-    return s.weight(e.distance,g)
+    return s.weight(e.distance)
 
 
 proc randomNeighbor*(s:Solution,g:Graph):(int,int,float64)=
@@ -86,7 +86,7 @@ proc maxDistance*(s:Solution,g:Graph):float=
 
   return max
 
-proc weight*(s:Solution,nd:float,g:Graph):float=
+proc weight*(s:Solution,nd:float):float=
   ## Calculates the weight of two cities that doesn't have a real weight between
   ## them, using the natural distance between them and the maximum distance in
   ## the solution.
@@ -131,7 +131,7 @@ proc cost*(s:Solution,g:Graph):float=
       j=s.cities[k+1]
       node=g.cities[i][j]
     if not node.exists:
-      sum=sum+s.weight(node.distance,g)
+      sum=sum+s.weight(node.distance)
     else:
       sum=sum+node.distance
       #echo g.cities[i][j]
